@@ -1,0 +1,254 @@
+{
+  "rest_points": [
+    {
+      "id": "rest_001",
+      "name": "三里屯太古里南区长椅",
+      "latitude": 39.932,
+      "longitude": 116.454,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "露天广场，有遮阳伞，适合短暂休息"
+    },
+    {
+      "id": "rest_002",
+      "name": "朝阳公园草坪",
+      "latitude": 39.936,
+      "longitude": 116.477,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": false,
+      "description": "可坐可躺，适合野餐，有树荫"
+    },
+    {
+      "id": "rest_003",
+      "name": "多抓鱼书店沙发",
+      "latitude": 39.928,
+      "longitude": 116.442,
+      "type": "free_seat",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "二楼阅读区，有插座，安静舒适"
+    },
+    {
+      "id": "rest_004",
+      "name": "PageOne书店咖啡区",
+      "latitude": 39.912,
+      "longitude": 116.456,
+      "type": "paid_low",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "消费入座，有大窗户，景观好"
+    },
+    {
+      "id": "rest_005",
+      "name": "京A露台座位",
+      "latitude": 39.93,
+      "longitude": 116.441,
+      "type": "paid_low",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "点一杯啤酒可以坐一下午，露台风景好"
+    },
+    {
+      "id": "rest_006",
+      "name": "团结湖公园长椅",
+      "latitude": 39.932,
+      "longitude": 116.46,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "湖边长椅，有树荫，适合看湖景"
+    },
+    {
+      "id": "rest_007",
+      "name": "Seesaw Coffee座位",
+      "latitude": 39.923,
+      "longitude": 116.447,
+      "type": "paid_low",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "点杯咖啡可久坐，有插座，适合工作"
+    },
+    {
+      "id": "rest_008",
+      "name": "工人体育场北门长椅",
+      "latitude": 39.93,
+      "longitude": 116.445,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "体育场外长椅，有树荫"
+    },
+    {
+      "id": "rest_009",
+      "name": "言几又书店阅读区",
+      "latitude": 39.931,
+      "longitude": 116.447,
+      "type": "free_seat",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "免费座位，空间大，可以看书"
+    },
+    {
+      "id": "rest_010",
+      "name": "建外SOHO中庭座椅",
+      "latitude": 39.922,
+      "longitude": 116.456,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "写字楼中庭，有遮阳伞"
+    },
+    {
+      "id": "rest_011",
+      "name": "三里屯西五街街心公园",
+      "latitude": 39.925,
+      "longitude": 116.443,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "小公园，有长椅，安静"
+    },
+    {
+      "id": "rest_012",
+      "name": "幸福村中路街边长椅",
+      "latitude": 39.929,
+      "longitude": 116.44,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "街边长椅，有树荫"
+    },
+    {
+      "id": "rest_013",
+      "name": "同仁堂休息区",
+      "latitude": 39.927,
+      "longitude": 116.441,
+      "type": "free_seat",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "店内休息区，有空调"
+    },
+    {
+      "id": "rest_014",
+      "name": "美克洞学馆休息区",
+      "latitude": 39.919,
+      "longitude": 116.455,
+      "type": "free_seat",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "设计感强，有沙发，免费"
+    },
+    {
+      "id": "rest_015",
+      "name": "朝阳公园南门广场",
+      "latitude": 39.933,
+      "longitude": 116.476,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "广场长椅，开阔"
+    },
+    {
+      "id": "rest_016",
+      "name": "蓝色港湾休憩区",
+      "latitude": 39.918,
+      "longitude": 116.459,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "商圈休憩区，有遮阳伞"
+    },
+    {
+      "id": "rest_017",
+      "name": "便利店门口座位",
+      "latitude": 39.926,
+      "longitude": 116.451,
+      "type": "paid_low",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "全家便利店，买水可坐"
+    },
+    {
+      "id": "rest_018",
+      "name": "东三环公交站座椅",
+      "latitude": 39.921,
+      "longitude": 116.453,
+      "type": "free_seat",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "公交站候车座椅，有顶棚"
+    },
+    {
+      "id": "rest_019",
+      "name": "工体北路绿化带长椅",
+      "latitude": 39.928,
+      "longitude": 116.446,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "路边绿化带，有树荫"
+    },
+    {
+      "id": "rest_020",
+      "name": "三里屯SOHO中庭",
+      "latitude": 39.918,
+      "longitude": 116.458,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "下沉广场，有遮阳设施"
+    },
+    {
+      "id": "rest_021",
+      "name": "Solitude店内座位",
+      "latitude": 39.927,
+      "longitude": 116.442,
+      "type": "paid_low",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "i人避难所，消费入座，超安静"
+    },
+    {
+      "id": "rest_022",
+      "name": "postpost天台",
+      "latitude": 39.93,
+      "longitude": 116.445,
+      "type": "paid_low",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "天台座位，视野开阔，适合拍照"
+    },
+    {
+      "id": "rest_023",
+      "name": "朝阳门外大街街心花园",
+      "latitude": 39.92,
+      "longitude": 116.45,
+      "type": "free_seat",
+      "has_roof": false,
+      "has_backrest": true,
+      "description": "小花园，有长椅和树荫"
+    },
+    {
+      "id": "rest_024",
+      "name": "太古里南区连廊座椅",
+      "latitude": 39.931,
+      "longitude": 116.452,
+      "type": "free_seat",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "室内连廊，有空调，冬暖夏凉"
+    },
+    {
+      "id": "rest_025",
+      "name": "便利店全家(幸福村店)",
+      "latitude": 39.931,
+      "longitude": 116.44,
+      "type": "paid_low",
+      "has_roof": true,
+      "has_backrest": true,
+      "description": "24小时便利店，门口有座位"
+    }
+  ]
+}

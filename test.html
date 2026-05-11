@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试页面 - 智行伴侣</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f3f4f6;
+            border-radius: 4px;
+        }
+        .success { color: #059669; }
+        .error { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>🔧 连接测试页面</h1>
+    
+    <div class="test-section">
+        <h2>测试1: 后端健康检查</h2>
+        <button onclick="testHealth()">测试 /health</button>
+        <div id="health-result" class="result">点击按钮开始测试...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试2: 获取POI数据</h2>
+        <button onclick="testPOIs()">测试 /api/pois</button>
+        <div id="pois-result" class="result">点击按钮开始测试...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试3: 直接fetch测试</h2>
+        <button onclick="directFetch()">直接fetch</button>
+        <div id="direct-result" class="result">点击按钮开始测试...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 控制台信息</h2>
+        <div id="console-log" class="result" style="max-height: 200px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        function log(msg, type = 'info') {
+            const consoleDiv = document.getElementById('console-log');
+            const time = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#dc2626' : type === 'success' ? '#059669' : '#4b5563';
+            consoleDiv.innerHTML += `<div style="color: ${color}">[${time}] ${msg}</div>`;
+            console.log(msg);
+        }
+
+        async function testHealth() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.innerHTML = '测试中...';
+            log('开始测试 /health 接口');
+            
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                log(`响应状态: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const data = await response.json();
+                log(`响应数据: ${JSON.stringify(data)}`, 'success');
+                
+                resultDiv.innerHTML = `<span class="success">✅ 成功！状态: ${data.status}</span>`;
+            } catch (error) {
+                log(`错误: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<span class="error">❌ 失败: ${error.message}</span>`;
+            }
+        }
+
+        async function testPOIs() {
+            const resultDiv = document.getElementById('pois-result');
+            resultDiv.innerHTML = '测试中...';
+            log('开始测试 /api/pois 接口');
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/pois');
+                log(`响应状态: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const data = await response.json();
+                log(`获取到 ${data.length} 条POI数据`, 'success');
+                
+                resultDiv.innerHTML = `<span class="success">✅ 成功！获取${data.length}条数据<br>第一家: ${data[0].name}</span>`;
+            } catch (error) {
+                log(`错误: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<span class="error">❌ 失败: ${error.message}</span>`;
+            }
+        }
+
+        async function directFetch() {
+            const resultDiv = document.getElementById('direct-result');
+            resultDiv.innerHTML = '测试中...';
+            log('开始直接fetch测试');
+            
+            try {
+                // 测试纯文本响应
+                const response = await fetch('http://localhost:8000/');
+                const text = await response.text();
+                log(`根路径响应: ${text}`, 'success');
+                
+                resultDiv.innerHTML = `<span class="success">✅ 后端可达！<br>${text}</span>`;
+            } catch (error) {
+                log(`错误: ${error.message}`, 'error');
+                resultDiv.innerHTML = `<span class="error">❌ 失败: ${error.message}<br><br>可能原因:<br>1. 后端未启动<br>2. CORS配置问题<br>3. 网络问题</span>`;
+            }
+        }
+
+        // 页面加载时执行测试
+        window.onload = () => {
+            log('测试页面已加载');
+            log(`当前页面地址: ${window.location.href}`);
+            log(`后端地址: http://localhost:8000`);
+        };
+    </script>
+</body>
+</html>

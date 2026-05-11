@@ -1,0 +1,59 @@
+{
+  "segments": [
+    {
+      "id": "cli_001",
+      "name": "三里屯路林荫段",
+      "start_lat": 39.930,
+      "start_lng": 116.450,
+      "end_lat": 39.928,
+      "end_lng": 116.447,
+      "type": "shade",
+      "benefit": "夏季体感温度低3℃",
+      "description": "两侧梧桐树成荫，步行凉爽"
+    },
+    {
+      "id": "cli_002",
+      "name": "工体北路地下通道",
+      "start_lat": 39.932,
+      "start_lng": 116.445,
+      "end_lat": 39.934,
+      "end_lng": 116.443,
+      "type": "indoor",
+      "benefit": "有空调，避雨",
+      "description": "地下通道连接工体东西两侧，全程空调"
+    },
+    {
+      "id": "cli_003",
+      "name": "朝阳公园林荫道",
+      "start_lat": 39.935,
+      "start_lng": 116.475,
+      "end_lat": 39.933,
+      "end_lng": 116.477,
+      "type": "shade",
+      "benefit": "树荫覆盖率80%",
+      "description": "公园内主干道，两侧大树成荫"
+    },
+    {
+      "id": "cli_004",
+      "name": "团结湖公园湖边步道",
+      "start_lat": 39.932,
+      "start_lng": 116.458,
+      "end_lat": 39.931,
+      "end_lng": 116.461,
+      "type": "water_side",
+      "benefit": "湖风降温，体感低2℃",
+      "description": "湖边步道，有微风和树荫"
+    },
+    {
+      "id": "cli_005",
+      "name": "三里屯SOHO下沉广场",
+      "start_lat": 39.918,
+      "start_lng": 116.458,
+      "end_lat": 39.920,
+      "end_lng": 116.457,
+      "type": "semi_indoor",
+      "benefit": "遮阳效果好，凉爽",
+      "description": "下沉式广场，有遮阳棚"
+    }
+  ]
+}
