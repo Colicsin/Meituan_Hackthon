@@ -14,41 +14,42 @@ from typing import List, Dict, Any
 class VibeAgent:
     """情绪匹配智能体"""
     
+    MOOD_KEYWORDS = {"安静", "热闹", "高能", "静谧", "平和", "浪漫", "舒适", "惬意", "活跃", "氛围", "独处", "放松"}
+    
     def __init__(self):
         """初始化Agent，预计算所有商家的向量"""
         print("🎭 初始化 VibeAgent...")
         
-        # 加载所有商家数据
         self.pois = load_pois()
-        
-        # 预计算所有商家的向量（使用评论文本）
         self.poi_embeddings: Dict[str, Any] = {}
         
         for poi in self.pois:
-            # 将商家的所有信息组合成文本
             text_parts = []
             
-            # 评论
+            mood_tags = self._extract_mood_tags(poi)
+            text_parts.extend(mood_tags * 3)
+            
             if poi.get("demo_reviews"):
                 text_parts.extend(poi["demo_reviews"])
             
-            # 标签
-            if poi.get("tags"):
-                text_parts.extend(poi["tags"])
-            
-            # 品类
             if poi.get("category"):
                 text_parts.append(poi["category"])
             
-            # 组合文本
             combined_text = " ".join(text_parts)
             
             if combined_text:
-                # 转成向量并缓存
                 vec = encode([combined_text])[0]
                 self.poi_embeddings[poi["id"]] = vec
         
         print(f"✅ VibeAgent初始化完成，已计算{len(self.poi_embeddings)}个商家向量")
+    
+    def _extract_mood_tags(self, poi: Dict) -> List[str]:
+        """提取POI的情绪标签"""
+        mood_tags = []
+        for tag in poi.get("tags", []):
+            if tag in self.MOOD_KEYWORDS:
+                mood_tags.append(tag)
+        return mood_tags
     
     def match(self, user_text: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """
@@ -67,10 +68,13 @@ class VibeAgent:
             - tags: 标签
             - rating: 评分
         """
-        # 将用户文本转换成向量
         user_vec = encode([user_text])[0]
         
-        # 计算与所有商家的相似度
+        user_mood_keywords = []
+        for word in user_text.split():
+            if word in self.MOOD_KEYWORDS:
+                user_mood_keywords.append(word)
+        
         scores = []
         for poi in self.pois:
             poi_id = poi["id"]
@@ -78,26 +82,38 @@ class VibeAgent:
             if poi_id not in self.poi_embeddings:
                 continue
             
-            # 计算相似度
             sim = cosine_similarity(user_vec, self.poi_embeddings[poi_id])
             
-            # 将相似度转换成0-100的匹配分数
-            # 余弦相似度范围[-1, 1]，转换到[0, 100]
-            match_score = int((sim + 1) / 2 * 100)
+            poi_mood_tags = self._extract_mood_tags(poi)
+            vibe_overlap = 0
+            if user_mood_keywords and poi_mood_tags:
+                intersection = len(set(user_mood_keywords) & set(poi_mood_tags))
+                vibe_overlap = intersection / max(len(user_mood_keywords), 1)
+            
+            final_score = sim * 0.7 + vibe_overlap * 0.3
+            
+            match_score = int((final_score + 1) / 2 * 100)
             
             scores.append({
                 "poi": poi,
                 "similarity": sim,
-                "match_score": match_score
+                "final_score": final_score,
+                "match_score": match_score,
+                "vibe_overlap": vibe_overlap
             })
         
-        # 按相似度排序
-        scores.sort(key=lambda x: x["similarity"], reverse=True)
+        scores.sort(key=lambda x: x["final_score"], reverse=True)
         
-        # 取前K个
         results = []
-        for item in scores[:top_k]:
+        categories_seen = set()
+        
+        for item in scores:
             poi = item["poi"]
+            cat = poi["category"]
+            
+            if cat in categories_seen and len(results) >= top_k:
+                continue
+            
             results.append({
                 "poi_id": poi["id"],
                 "name": poi["name"],
@@ -105,9 +121,14 @@ class VibeAgent:
                 "rating": poi["rating"],
                 "avg_price": poi["avg_price"],
                 "match_score": item["match_score"],
-                "tags": poi["tags"][:3],  # 最多显示3个标签
+                "tags": poi["tags"][:3],
                 "address": poi["address"]
             })
+            
+            categories_seen.add(cat)
+            
+            if len(results) >= top_k:
+                break
         
         return results
     

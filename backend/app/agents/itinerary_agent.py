@@ -64,9 +64,51 @@ class ItineraryAgent:
         current_pos = (current_lat, current_lon)
         current_time = self._parse_time(start_time)
         
-        while candidates and remaining_time > 30:
+        selected = self._do_plan(
+            candidates, current_pos, current_time, 
+            remaining_time, preferences, mode
+        )
+        
+        if len(selected) == 0:
+            extended_time = int(total_budget_minutes * 1.5)
+            remaining_time_ext = extended_time
+            selected = self._do_plan(
+                candidates, current_pos, current_time,
+                remaining_time_ext, preferences, mode
+            )
+        
+        if len(selected) == 0 and mode == "walk":
+            selected = self._do_plan(
+                candidates, current_pos, current_time,
+                total_budget_minutes, preferences, "bike"
+            )
+        
+        if len(selected) == 0:
+            selected = self._fallback_nearest_pois(
+                current_pos, current_time, total_budget_minutes, mode
+            )
+        
+        if len(selected) >= 2:
+            selected = self._insert_rest_points(selected, mode)
+        
+        return self._build_result(selected, current_lat, current_lon, mode)
+    
+    def _do_plan(
+        self,
+        candidates: List[Dict],
+        current_pos: Tuple[float, float],
+        current_time: datetime,
+        remaining_time: int,
+        preferences: List[str],
+        mode: str
+    ) -> List[Dict]:
+        """执行规划主循环"""
+        selected = []
+        candidates_copy = candidates.copy()
+        
+        while candidates_copy and remaining_time > 30:
             best = self._select_next(
-                candidates, 
+                candidates_copy, 
                 current_pos, 
                 remaining_time,
                 preferences,
@@ -85,8 +127,8 @@ class ItineraryAgent:
             stay_time = best.get("duration_min", 60)
             total_item_time = travel_time + stay_time
             
-            if total_item_time > remaining_time:
-                candidates.remove(best)
+            if travel_time > remaining_time:
+                candidates_copy.remove(best)
                 continue
             
             arrival_time = current_time + timedelta(minutes=travel_time)
@@ -107,15 +149,66 @@ class ItineraryAgent:
                 "tags": best["tags"][:3]
             })
             
-            candidates.remove(best)
+            candidates_copy.remove(best)
             current_pos = (best["latitude"], best["longitude"])
             current_time = leave_time
             remaining_time -= total_item_time
         
-        if len(selected) >= 2:
-            selected = self._insert_rest_points(selected, mode)
+        return selected
+    
+    def _fallback_nearest_pois(
+        self,
+        current_pos: Tuple[float, float],
+        current_time: datetime,
+        budget_minutes: int,
+        mode: str
+    ) -> List[Dict]:
+        """兜底：返回距离最近的3个POI"""
+        scored = []
+        for poi in self.pois:
+            distance = haversine_distance(
+                current_pos[0], current_pos[1],
+                poi["latitude"], poi["longitude"]
+            )
+            scored.append((poi, distance))
         
-        return self._build_result(selected, current_lat, current_lon, mode)
+        scored.sort(key=lambda x: x[1])
+        nearest_three = [p[0] for p in scored[:3]]
+        
+        selected = []
+        pos = current_pos
+        time = current_time
+        
+        for poi in nearest_three:
+            distance = haversine_distance(
+                pos[0], pos[1],
+                poi["latitude"], poi["longitude"]
+            )
+            travel_time = estimate_travel_time(distance, mode)
+            stay_time = poi.get("duration_min", 60)
+            
+            arrival_time = time + timedelta(minutes=travel_time)
+            leave_time = arrival_time + timedelta(minutes=stay_time)
+            
+            selected.append({
+                "poi_id": poi["id"],
+                "name": poi["name"],
+                "category": poi["category"],
+                "rating": poi["rating"],
+                "avg_price": poi["avg_price"],
+                "distance_from_prev": round(distance, 2),
+                "travel_time_min": travel_time,
+                "stay_time_min": stay_time,
+                "arrival_time": self._format_time(arrival_time),
+                "leave_time": self._format_time(leave_time),
+                "address": poi["address"],
+                "tags": poi["tags"][:3]
+            })
+            
+            pos = (poi["latitude"], poi["longitude"])
+            time = leave_time
+        
+        return selected
     
     def _filter_candidates(
         self, 
@@ -162,7 +255,7 @@ class ItineraryAgent:
             travel_time = estimate_travel_time(distance, mode)
             stay_time = poi.get("duration_min", 60)
             
-            if travel_time + stay_time > remaining_time:
+            if travel_time > remaining_time:
                 continue
             
             distance_score = max(0, 10 - distance)
@@ -172,7 +265,9 @@ class ItineraryAgent:
                 if pref in poi["tags"]:
                     pref_score += 3
             
-            total_score = distance_score + rating_score + pref_score
+            time_fit_score = max(0, 1 - (travel_time + stay_time) / max(remaining_time, 1))
+            
+            total_score = distance_score + rating_score + pref_score + time_fit_score * 5
             
             scored.append((poi, total_score))
         

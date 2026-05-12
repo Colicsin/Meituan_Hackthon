@@ -241,22 +241,23 @@ class DecisionAgent:
     async def _generate_itinerary(self, state: DialogState) -> Dict[str, Any]:
         """生成行程方案"""
         
-        # 默认参数
-        lat = state.fields.get("location_lat", 39.931)
-        lon = state.fields.get("location_lon", 116.453)
-        hours = state.fields.get("time_budget", 3.0)
+        lat = state.fields.get("location_lat") or 39.931
+        lon = state.fields.get("location_lon") or 116.453
+        hours = state.fields.get("time_budget") or 3.0
         budget = state.fields.get("budget")
         
-        # 调用Itinerary Agent
+        emotion = state.fields.get("emotion")
+        preferences = [emotion] if emotion else []
+        
         agent = get_itinerary_agent()
         result = agent.plan(
             current_lat=lat,
             current_lon=lon,
             stay_hours=hours,
+            preferences=preferences,
             budget=budget
         )
         
-        # 构建回复
         message = f"好的！为你规划了一个行程：\n\n"
         message += f"总时长: {result['total_time_min']//60}小时{result['total_time_min']%60}分钟\n"
         message += f"总距离: {result['total_distance_km']}km\n"

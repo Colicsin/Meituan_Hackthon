@@ -126,9 +126,19 @@ class MockLLMClient(LLMClient):
                 if group_match:
                     slots["group_size"] = int(group_match.group(1))
                 
-                time_match = re.search(r'(\d+(?:\.\d+)?)\s*小时', user_msg)
-                if time_match:
-                    slots["time_budget"] = float(time_match.group(1))
+                CHINESE_NUM = {"一": 1, "两": 2, "二": 2, "三": 3, "四": 4, "五": 5, "半": 0.5}
+                time_patterns = [
+                    (r'(\d+(?:\.\d+)?)\s*(?:小时|h|H)', lambda m: float(m.group(1))),
+                    (r'([一两二三四五])\s*(?:个)?\s*小时', lambda m: CHINESE_NUM.get(m.group(1), 3.0)),
+                    (r'一个?(上午|下午|晚上)', lambda _: 4.0),
+                    (r'半天', lambda _: 4.0),
+                    (r'一整天', lambda _: 8.0),
+                ]
+                for pattern, extractor in time_patterns:
+                    m = re.search(pattern, user_msg)
+                    if m:
+                        slots["time_budget"] = extractor(m)
+                        break
                 
                 budget_match = re.search(r'(?:人均|每人).*?(\d+)', user_msg)
                 if budget_match:

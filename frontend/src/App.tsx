@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapView } from "./components/MapView";
 import { MoodDial } from "./components/MoodDial";
@@ -52,19 +52,26 @@ interface DialogState {
 }
 
 function moodVectorToText(v: MoodVector): string {
+  const dist = Math.sqrt(v.x * v.x + v.y * v.y);
+  const angle = Math.atan2(v.y, v.x);
   const parts: string[] = [];
   
-  if (v.x > 0.5) parts.push("热闹", "聚会", "社交");
-  else if (v.x > 0) parts.push("热闹");
-  else if (v.x < -0.5) parts.push("安静", "独处", "一个人");
-  else if (v.x < 0) parts.push("安静");
+  const direction = Math.round((angle / Math.PI) * 4 + 4) % 8;
+  const dirWords = [
+    ["安静", "独处"],
+    ["舒适", "惬意"],
+    ["静谧", "放松"],
+    ["温和", "悠闲"],
+    ["活跃", "氛围"],
+    ["热闹", "聚会"],
+    ["高能", "刺激"],
+    ["独处", "沉静"]
+  ];
+  parts.push(...dirWords[direction]);
   
-  if (v.y > 0.5) parts.push("高能", "刺激", "好玩");
-  else if (v.y > 0) parts.push("活跃");
-  else if (v.y < -0.5) parts.push("静谧", "休息", "放松");
-  else if (v.y < 0) parts.push("舒适");
-  
-  if (parts.length === 0) parts.push("舒适", "惬意");
+  if (dist > 0.7) parts.push("强烈");
+  else if (dist > 0.3) parts.push("温和");
+  else parts.push("平淡");
   
   return parts.join(" ");
 }
@@ -83,6 +90,22 @@ function App() {
   const [showClimate, setShowClimate] = useState(false);
   const [moodValue, setMoodValue] = useState<MoodVector>({ x: 0, y: 0 });
   const [selectedRoute, setSelectedRoute] = useState<any>(null);
+
+  useEffect(() => {
+    if (activeTab !== "mood") {
+      setRecommendations([]);
+      setRoutes([]);
+      setSelectedRoute(null);
+      setSelectedIds([]);
+      setRestPoints([]);
+      setClimateSegments([]);
+      setShowRest(false);
+      setShowClimate(false);
+    }
+    if (activeTab !== "itinerary") {
+      setItinerary(null);
+    }
+  }, [activeTab]);
 
   const handleMoodSelect = async (moodText: string) => {
     setLoading(true);
@@ -111,7 +134,15 @@ function App() {
   const handleChatComplete = (state: DialogState) => {
     console.log("对话完成，画像数据:", state);
     if (state.time_budget) {
-      handlePlanItinerary("wudaokou");
+      const locMap: Record<string, string> = {
+        "五道口": "wudaokou",
+        "三里屯": "sanlitun",
+        "王府井": "wangfujing"
+      };
+      const loc = state.location && locMap[state.location] 
+        ? locMap[state.location] 
+        : "sanlitun";
+      handlePlanItinerary(loc);
     }
   };
 
@@ -295,7 +326,7 @@ function App() {
           </div>
         )}
 
-        {routes.length > 0 && (
+        {activeTab === "mood" && routes.length > 0 && (
           <div className="mb-6">
             <ItineraryCardGroup
               routes={routes}
@@ -307,7 +338,7 @@ function App() {
           </div>
         )}
 
-        {selectedRoute && selectedRoute.segments && (
+        {activeTab === "mood" && selectedRoute && selectedRoute.segments && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -438,7 +469,7 @@ function App() {
           </motion.div>
         )}
 
-        {showRest && restPoints.length > 0 && (
+        {activeTab === "mood" && showRest && restPoints.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -469,7 +500,7 @@ function App() {
           </motion.div>
         )}
 
-        {showClimate && climateSegments.length > 0 && (
+        {activeTab === "mood" && showClimate && climateSegments.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -505,7 +536,7 @@ function App() {
           </motion.div>
         )}
 
-        {!loading && recommendations.length > 0 && (
+        {activeTab === "mood" && !loading && recommendations.length > 0 && (
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
             <h2 className="text-xl font-semibold mb-6 text-gray-800">
               为你推荐 {recommendations.length} 个地方
