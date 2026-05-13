@@ -5,6 +5,8 @@ import { MoodDial } from "./components/MoodDial";
 import { ChatBox } from "./components/ChatBox";
 import { ItineraryCardGroup } from "./components/ItineraryCard";
 import { LoginPage } from "./components/LoginPage";
+import { DestinationPage } from "./components/DestinationPage";
+import { TaskPlannerPage } from "./components/TaskPlannerPage";
 
 interface Recommendation {
   poi_id: string;
@@ -87,7 +89,7 @@ function App() {
   const [routes, setRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [planning, setPlanning] = useState(false);
-  const [activeTab, setActiveTab] = useState<"mood" | "chat" | "itinerary">("mood");
+  const [activeTab, setActiveTab] = useState<"mood" | "chat" | "itinerary" | "destination" | "task">("mood");
   const [restPoints, setRestPoints] = useState<any[]>([]);
   const [showRest, setShowRest] = useState(false);
   const [climateSegments, setClimateSegments] = useState<any[]>([]);
@@ -347,20 +349,40 @@ function App() {
           拖动情绪拨盘或对话，找到最适合你的地方
         </p>
 
-        <div className="flex gap-2 mb-6 justify-center">
+        <div className="flex gap-2 mb-6 justify-center flex-wrap">
           <button
             onClick={() => setActiveTab("mood")}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+            className={`px-5 py-3 rounded-xl font-medium transition-all ${
               activeTab === "mood"
                 ? "bg-purple-600 text-white shadow-lg"
                 : "bg-white text-gray-700 hover:bg-gray-100"
             }`}
           >
-            🎭 情绪拨盘
+            🎭 情绪闲逛
+          </button>
+          <button
+            onClick={() => setActiveTab("destination")}
+            className={`px-5 py-3 rounded-xl font-medium transition-all ${
+              activeTab === "destination"
+                ? "bg-purple-600 text-white shadow-lg"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            🗺️ 目的地规划
+          </button>
+          <button
+            onClick={() => setActiveTab("task")}
+            className={`px-5 py-3 rounded-xl font-medium transition-all ${
+              activeTab === "task"
+                ? "bg-purple-600 text-white shadow-lg"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            📋 目的任务
           </button>
           <button
             onClick={() => setActiveTab("chat")}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+            className={`px-5 py-3 rounded-xl font-medium transition-all ${
               activeTab === "chat"
                 ? "bg-purple-600 text-white shadow-lg"
                 : "bg-white text-gray-700 hover:bg-gray-100"
@@ -370,15 +392,19 @@ function App() {
           </button>
           <button
             onClick={() => setActiveTab("itinerary")}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+            className={`px-5 py-3 rounded-xl font-medium transition-all ${
               activeTab === "itinerary"
                 ? "bg-purple-600 text-white shadow-lg"
                 : "bg-white text-gray-700 hover:bg-gray-100"
             }`}
           >
-            🗺️ 行程规划
+            🚶 快速规划
           </button>
         </div>
+
+        {activeTab === "destination" && <DestinationPage />}
+        
+        {activeTab === "task" && <TaskPlannerPage />}
 
         {activeTab === "mood" && (
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">

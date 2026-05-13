@@ -14,7 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from app.api import routes, vibe, itinerary, rest, climate, llm_test, chat, live, auth
+from app.api import routes, vibe, itinerary, rest, climate, llm_test, chat, live, auth, route_planner
 from app.database.session import init_db
 
 init_db()
@@ -28,6 +28,7 @@ app.include_router(llm_test.router, tags=["LLM测试"])
 app.include_router(chat.router, tags=["对话"])
 app.include_router(live.router, tags=["实时事件"])
 app.include_router(auth.router, tags=["认证"])
+app.include_router(route_planner.router, tags=["路线规划"])
 
 @app.get("/")
 def root():
