@@ -42,3 +42,8 @@ coverage/
 
 # Local ML models (large binaries, download manually)
 backend/models/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3

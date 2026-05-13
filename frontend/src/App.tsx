@@ -4,6 +4,7 @@ import { MapView } from "./components/MapView";
 import { MoodDial } from "./components/MoodDial";
 import { ChatBox } from "./components/ChatBox";
 import { ItineraryCardGroup } from "./components/ItineraryCard";
+import { LoginPage } from "./components/LoginPage";
 
 interface Recommendation {
   poi_id: string;
@@ -77,6 +78,9 @@ function moodVectorToText(v: MoodVector): string {
 }
 
 function App() {
+  const [currentUser, setCurrentUser] = useState<{ id: number; username: string } | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [itinerary, setItinerary] = useState<any>(null);
@@ -90,6 +94,52 @@ function App() {
   const [showClimate, setShowClimate] = useState(false);
   const [moodValue, setMoodValue] = useState<MoodVector>({ x: 0, y: 0 });
   const [selectedRoute, setSelectedRoute] = useState<any>(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const sessionId = localStorage.getItem("session_id");
+      if (!sessionId) {
+        setCheckingAuth(false);
+        return;
+      }
+      
+      try {
+        const res = await fetch("http://localhost:8001/auth/me", {
+          credentials: "include",
+          headers: {
+            "Cookie": `session_id=${sessionId}`
+          }
+        });
+        
+        if (res.ok) {
+          const user = await res.json();
+          setCurrentUser(user);
+        } else {
+          localStorage.removeItem("session_id");
+        }
+      } catch (err) {
+        console.error("Auth check failed:", err);
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+    
+    checkAuth();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:8001/auth/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+    
+    localStorage.removeItem("session_id");
+    setCurrentUser(null);
+  };
 
   useEffect(() => {
     if (activeTab !== "mood") {
@@ -264,12 +314,35 @@ function App() {
     }
   };
 
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 flex items-center justify-center">
+        <div className="text-white text-xl">加载中...</div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return <LoginPage onLoginSuccess={(user) => setCurrentUser(user)} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
       <div className="max-w-4xl mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center mb-2 text-gray-800">
-          现在就出发
-        </h1>
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-3xl font-bold text-gray-800">
+            现在就出发
+          </h1>
+          <div className="flex items-center gap-3">
+            <span className="text-gray-600">欢迎，{currentUser.username}</span>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              退出登录
+            </button>
+          </div>
+        </div>
         <p className="text-center text-gray-500 mb-8">
           拖动情绪拨盘或对话，找到最适合你的地方
         </p>
