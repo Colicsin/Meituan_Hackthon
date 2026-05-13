@@ -79,45 +79,44 @@ export function TaskPlannerPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span>📋</span> 目的任务规划
-        </h2>
-        <p className="text-gray-500 text-sm mb-6">
-          要做什么事？帮你安排最佳地点组合
-        </p>
+      <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/50 shadow-xl shadow-slate-200/50 p-6">
+        <div className="mb-6">
+          <h2 className="text-lg font-medium text-slate-700 flex items-center gap-2">
+            <span className="text-xl">📋</span> 目的任务规划
+          </h2>
+          <p className="text-sm text-slate-400 mt-1">
+            告诉我你想做什么，帮你安排最佳地点组合
+          </p>
+        </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            选择要做的任务 <span className="text-gray-400">(可多选)</span>
+        <div className="mb-5">
+          <label className="block text-xs font-medium text-slate-500 mb-2">
+            选择要做的任务
           </label>
           <div className="grid grid-cols-2 gap-2">
             {tasks.map(t => (
               <button
                 key={t.task}
                 onClick={() => toggleTask(t.task)}
-                className={`p-3 rounded-xl text-left transition-all ${
+                className={`p-2.5 rounded-xl text-left transition-all ${
                   selectedTasks.includes(t.task)
-                    ? "bg-purple-500 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-slate-800 text-white shadow-lg"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
-                <div className="font-medium">{t.task}</div>
-                <div className={`text-xs mt-1 ${selectedTasks.includes(t.task) ? "text-purple-100" : "text-gray-500"}`}>
-                  {t.categories.slice(0, 2).join("、")}
-                </div>
+                <div className="font-medium text-sm">{t.task}</div>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-2 gap-4 mb-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">所在位置</label>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5">所在位置</label>
             <select
               value={location}
               onChange={e => setLocation(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none text-sm bg-white/50"
             >
               <option value="">选择位置...</option>
               {locations.map(loc => (
@@ -126,8 +125,8 @@ export function TaskPlannerPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              时间预算 <span className="text-gray-400">{timeBudget}小时</span>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5">
+              时间预算 {timeBudget}小时
             </label>
             <input
               type="range"
@@ -135,13 +134,13 @@ export function TaskPlannerPage() {
               max="8"
               value={timeBudget}
               onChange={e => setTimeBudget(Number(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
+              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-500 mt-3"
             />
           </div>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">出行方式</label>
+        <div className="mb-5">
+          <label className="block text-xs font-medium text-slate-500 mb-2">出行方式</label>
           <div className="flex gap-2">
             {[
               { id: "walk", label: "步行", icon: "🚶" },
@@ -151,10 +150,10 @@ export function TaskPlannerPage() {
               <button
                 key={m.id}
                 onClick={() => setMode(m.id as any)}
-                className={`flex-1 py-3 rounded-xl font-medium transition-all ${
+                className={`flex-1 py-2.5 rounded-xl font-medium transition-all text-sm ${
                   mode === m.id
-                    ? "bg-purple-500 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-slate-800 text-white shadow-lg"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
                 {m.icon} {m.label}
@@ -166,7 +165,7 @@ export function TaskPlannerPage() {
         <button
           onClick={handlePlan}
           disabled={loading}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/20 transition-all disabled:opacity-50 text-sm"
         >
           {loading ? "规划中..." : "开始规划"}
         </button>
@@ -176,72 +175,46 @@ export function TaskPlannerPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-lg p-6"
+          className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/50 shadow-xl shadow-slate-200/50 p-6"
         >
-          <h3 className="text-lg font-bold text-gray-800 mb-4">
-            📊 规划结果
+          <h3 className="text-base font-medium text-slate-700 mb-4">
+            规划结果
           </h3>
 
           {result.best_plan ? (
             <div className="space-y-4">
-              <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border-2 border-purple-200">
-                <div className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+              <div className="p-4 bg-gradient-to-br from-blue-50/50 to-purple-50/50 rounded-xl border border-blue-100/30">
+                <div className="text-xs font-medium text-blue-600 mb-3 flex items-center gap-1">
                   <span>⭐</span> 推荐方案
                 </div>
                 <div className="space-y-2">
                   {result.best_plan.places.map((place: any, idx: number) => (
                     <div key={idx} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">
+                      <div className="w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center font-medium text-xs">
                         {idx + 1}
                       </div>
                       <div className="flex-1">
-                        <div className="font-medium text-gray-800">{place.name}</div>
-                        <div className="text-sm text-gray-500">
-                          {place.category} · ⭐{place.rating} · {place.task}
+                        <div className="font-medium text-slate-700 text-sm">{place.name}</div>
+                        <div className="text-xs text-slate-400">
+                          {place.category} · ⭐{place.rating}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-3 pt-3 border-t border-purple-200 flex justify-between text-sm text-gray-600">
-                  <span>⏱️ 总时长 {result.best_plan.total_time_min}分钟</span>
-                  <span>📍 总路程 {result.best_plan.total_distance_km}km</span>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-semibold text-gray-800 mb-3">路线安排</h4>
-                <div className="space-y-2">
-                  {result.best_plan.route.map((seg: any, idx: number) => (
-                    <div key={idx} className="p-3 bg-gray-50 rounded-lg">
-                      <div className="flex justify-between items-center text-sm">
-                        <div>
-                          <span className="font-medium text-gray-800">{seg.from}</span>
-                          <span className="text-gray-400 mx-2">→</span>
-                          <span className="font-medium text-gray-800">{seg.to}</span>
-                        </div>
-                        <div className="text-gray-500">
-                          {seg.time_min}分钟
-                          {seg.stay_min && ` + 停留${seg.stay_min}分钟`}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="mt-3 pt-3 border-t border-blue-100/50 flex justify-between text-xs text-slate-500">
+                  <span>⏱️ {result.best_plan.total_time_min}分钟</span>
+                  <span>📍 {result.best_plan.total_distance_km}km</span>
                 </div>
               </div>
 
               {result.combinations.length > 1 && (
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-3">其他方案</h4>
-                  <div className="space-y-2">
+                  <h4 className="text-xs font-medium text-slate-500 mb-2">其他方案</h4>
+                  <div className="space-y-1.5">
                     {result.combinations.slice(1, 3).map((combo: any, idx: number) => (
-                      <div key={idx} className="p-3 bg-gray-50 rounded-lg text-sm">
-                        <div className="flex justify-between items-center">
-                          <div className="text-gray-700">
-                            {combo.places.map((p: any) => p.name).join(" → ")}
-                          </div>
-                          <div className="text-gray-500">{combo.total_time_min}分钟</div>
-                        </div>
+                      <div key={idx} className="p-2.5 bg-slate-50 rounded-lg text-xs text-slate-600">
+                        {combo.places.map((p: any) => p.name).join(" → ")} · {combo.total_time_min}分钟
                       </div>
                     ))}
                   </div>
@@ -249,11 +222,8 @@ export function TaskPlannerPage() {
               )}
             </div>
           ) : (
-            <div className="p-4 bg-yellow-50 rounded-xl text-yellow-800">
-              <div className="font-medium mb-1">未找到合适方案</div>
-              <div className="text-sm">
-                时间预算可能不足，建议增加时间或减少任务
-              </div>
+            <div className="p-4 bg-amber-50/50 rounded-xl text-amber-600 text-sm">
+              未找到合适方案，建议增加时间或减少任务
             </div>
           )}
         </motion.div>

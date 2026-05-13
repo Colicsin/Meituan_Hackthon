@@ -319,8 +319,15 @@ function App() {
 
   if (checkingAuth) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 flex items-center justify-center">
-        <div className="text-white text-xl">加载中...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-amber-50 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-slate-600 text-lg font-light">正在加载</div>
+        </motion.div>
       </div>
     );
   }
@@ -329,88 +336,73 @@ function App() {
     return <LoginPage onLoginSuccess={(user) => setCurrentUser(user)} />;
   }
 
+  const tabs = [
+    { id: "mood", label: "情绪闲逛", icon: "🎭", desc: "随心探索" },
+    { id: "destination", label: "目的地", icon: "🗺️", desc: "从A到B" },
+    { id: "task", label: "目的任务", icon: "📋", desc: "安排行程" },
+    { id: "smartchat", label: "AI助手", icon: "✨", desc: "智能对话" },
+    { id: "itinerary", label: "快速规划", icon: "🚶", desc: "一键生成" },
+  ] as const;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="flex justify-between items-center mb-2">
-          <h1 className="text-3xl font-bold text-gray-800">
-            现在就出发
-          </h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-amber-50/20 relative overflow-hidden">
+      {/* 背景装饰 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-amber-100/30 to-pink-100/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-blue-50/20 to-transparent rounded-full"></div>
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-6">
+        {/* 顶部栏 */}
+        <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
-            <span className="text-gray-600">欢迎，{currentUser.username}</span>
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg shadow-lg shadow-blue-500/20">
+              ✨
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold text-slate-800 tracking-tight">智行伴侣</h1>
+              <p className="text-xs text-slate-400 font-light">你的出行好朋友</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/60 backdrop-blur-sm rounded-full border border-slate-200/50">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center text-white text-xs">
+                {currentUser.username.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm text-slate-600 font-medium">{currentUser.username}</span>
+            </div>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              className="text-slate-400 hover:text-slate-600 text-sm font-medium transition-colors"
             >
-              退出登录
+              退出
             </button>
           </div>
         </div>
-        <p className="text-center text-gray-500 mb-8">
-          拖动情绪拨盘或对话，找到最适合你的地方
-        </p>
 
-        <div className="flex gap-2 mb-6 justify-center flex-wrap">
-          <button
-            onClick={() => setActiveTab("mood")}
-            className={`px-5 py-3 rounded-xl font-medium transition-all ${
-              activeTab === "mood"
-                ? "bg-purple-600 text-white shadow-lg"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            🎭 情绪闲逛
-          </button>
-          <button
-            onClick={() => setActiveTab("destination")}
-            className={`px-5 py-3 rounded-xl font-medium transition-all ${
-              activeTab === "destination"
-                ? "bg-purple-600 text-white shadow-lg"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            🗺️ 目的地规划
-          </button>
-          <button
-            onClick={() => setActiveTab("task")}
-            className={`px-5 py-3 rounded-xl font-medium transition-all ${
-              activeTab === "task"
-                ? "bg-purple-600 text-white shadow-lg"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            📋 目的任务
-          </button>
-          <button
-            onClick={() => setActiveTab("chat")}
-            className={`px-5 py-3 rounded-xl font-medium transition-all ${
-              activeTab === "chat"
-                ? "bg-purple-600 text-white shadow-lg"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            💬 智能对话
-          </button>
-          <button
-            onClick={() => setActiveTab("smartchat")}
-            className={`px-5 py-3 rounded-xl font-medium transition-all ${
-              activeTab === "smartchat"
-                ? "bg-purple-600 text-white shadow-lg"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            🤖 AI助手
-          </button>
-          <button
-            onClick={() => setActiveTab("itinerary")}
-            className={`px-5 py-3 rounded-xl font-medium transition-all ${
-              activeTab === "itinerary"
-                ? "bg-purple-600 text-white shadow-lg"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            🚶 快速规划
-          </button>
+        {/* 导航标签 */}
+        <div className="flex gap-1.5 mb-8 p-1.5 bg-white/50 backdrop-blur-sm rounded-2xl border border-slate-200/30 shadow-sm overflow-x-auto">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 min-w-[100px] py-3 px-4 rounded-xl transition-all ${
+                activeTab === tab.id
+                  ? "bg-white shadow-md border border-slate-100"
+                  : "hover:bg-white/50"
+              }`}
+            >
+              <div className="text-xl mb-1">{tab.icon}</div>
+              <div className={`text-sm font-medium ${activeTab === tab.id ? "text-slate-800" : "text-slate-500"}`}>
+                {tab.label}
+              </div>
+              <div className={`text-xs mt-0.5 ${activeTab === tab.id ? "text-slate-400" : "text-slate-400/60"}`}>
+                {tab.desc}
+              </div>
+            </button>
+          ))}
         </div>
 
         {activeTab === "destination" && <DestinationPage />}
@@ -418,20 +410,21 @@ function App() {
         {activeTab === "task" && <TaskPlannerPage />}
 
         {activeTab === "mood" && (
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
-            <h2 className="text-xl font-semibold mb-6 text-center text-gray-800">
-              拖动拨盘选择你的心情
-            </h2>
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/50 shadow-xl shadow-slate-200/50 p-8 mb-6">
+            <div className="text-center mb-6">
+              <h2 className="text-xl font-medium text-slate-700 mb-2">今天的心情如何？</h2>
+              <p className="text-sm text-slate-400">拖动拨盘，找到和你心情匹配的地方</p>
+            </div>
             <div className="flex justify-center">
               <MoodDial onChange={handleMoodDialChange} size={280} />
             </div>
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500">
-                当前情绪向量: x={moodValue.x.toFixed(2)}, y={moodValue.y.toFixed(2)}
-              </p>
-              <p className="text-sm text-gray-600 mt-1">
-                → "{moodVectorToText(moodValue)}"
-              </p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full">
+                <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                <p className="text-sm text-slate-500">
+                  {moodVectorToText(moodValue)}
+                </p>
+              </div>
             </div>
           </div>
         )}

@@ -74,21 +74,23 @@ export function DestinationPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span>🗺️</span> 目的地规划
-        </h2>
-        <p className="text-gray-500 text-sm mb-6">
-          从A到B，顺便发现沿途好去处
-        </p>
+      <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/50 shadow-xl shadow-slate-200/50 p-6">
+        <div className="mb-6">
+          <h2 className="text-lg font-medium text-slate-700 flex items-center gap-2">
+            <span className="text-xl">🗺️</span> 目的地规划
+          </h2>
+          <p className="text-sm text-slate-400 mt-1">
+            从A到B，发现沿途的惊喜
+          </p>
+        </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-2 gap-4 mb-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">起点</label>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5">起点</label>
             <select
               value={fromLoc}
               onChange={e => setFromLoc(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none text-sm bg-white/50"
             >
               <option value="">选择起点...</option>
               {locations.map(loc => (
@@ -97,11 +99,11 @@ export function DestinationPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">终点</label>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5">终点</label>
             <select
               value={toLoc}
               onChange={e => setToLoc(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none text-sm bg-white/50"
             >
               <option value="">选择终点...</option>
               {locations.map(loc => (
@@ -111,8 +113,8 @@ export function DestinationPage() {
           </div>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">出行方式</label>
+        <div className="mb-5">
+          <label className="block text-xs font-medium text-slate-500 mb-2">出行方式</label>
           <div className="flex gap-2">
             {[
               { id: "walk", label: "步行", icon: "🚶" },
@@ -122,10 +124,10 @@ export function DestinationPage() {
               <button
                 key={m.id}
                 onClick={() => setMode(m.id as any)}
-                className={`flex-1 py-3 rounded-xl font-medium transition-all ${
+                className={`flex-1 py-2.5 rounded-xl font-medium transition-all text-sm ${
                   mode === m.id
-                    ? "bg-purple-500 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-slate-800 text-white shadow-lg"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
                 {m.icon} {m.label}
@@ -137,7 +139,7 @@ export function DestinationPage() {
         <button
           onClick={handlePlan}
           disabled={loading}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/20 transition-all disabled:opacity-50 text-sm"
         >
           {loading ? "规划中..." : "开始规划"}
         </button>
@@ -147,58 +149,58 @@ export function DestinationPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-lg p-6"
+          className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/50 shadow-xl shadow-slate-200/50 p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-800">
-              📍 {result.from.name} → {result.to.name}
+            <h3 className="text-base font-medium text-slate-700">
+              {result.from.name} → {result.to.name}
             </h3>
-            <div className="text-sm text-gray-500">
-              直线距离 {result.direct_distance_km}km
+            <div className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
+              直线 {result.direct_distance_km}km
             </div>
           </div>
 
           {result.nearby_pois.length > 0 && (
-            <div className="mb-4 p-4 bg-green-50 rounded-xl">
-              <div className="text-sm font-medium text-green-800 mb-2">
-                🎯 沿途发现 {result.nearby_pois.length} 个好去处
+            <div className="mb-5 p-3 bg-blue-50/50 rounded-xl border border-blue-100/50">
+              <div className="text-xs font-medium text-blue-600 mb-2 flex items-center gap-1">
+                <span>💡</span> 沿途发现 {result.nearby_pois.length} 个好去处
               </div>
               <div className="flex gap-2 flex-wrap">
                 {result.nearby_pois.map((poi: any) => (
                   <span
                     key={poi.id}
-                    className="px-3 py-1 bg-white rounded-lg text-sm text-gray-700 border border-green-200"
+                    className="px-2.5 py-1 bg-white rounded-lg text-xs text-slate-600 border border-blue-100/50"
                   >
-                    {poi.name} · {poi.category}
+                    {poi.name}
                   </span>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="space-y-3 mb-4">
+          <div className="space-y-2 mb-5">
             {result.routes.map((route: RoutePlan) => (
               <button
                 key={route.type}
                 onClick={() => setSelectedRoute(route)}
-                className={`w-full p-4 rounded-xl text-left transition-all ${
+                className={`w-full p-3 rounded-xl text-left transition-all ${
                   selectedRoute?.type === route.type
-                    ? "bg-purple-50 border-2 border-purple-500"
-                    : "bg-gray-50 border-2 border-transparent hover:border-gray-200"
+                    ? "bg-blue-50 border-2 border-blue-300"
+                    : "bg-slate-50 border-2 border-transparent hover:border-slate-200"
                 }`}
               >
                 <div className="flex justify-between items-center">
                   <div>
-                    <div className="font-semibold text-gray-800">{route.name}</div>
-                    <div className="text-sm text-gray-500">{route.summary}</div>
+                    <div className="font-medium text-slate-700 text-sm">{route.name}</div>
+                    <div className="text-xs text-slate-400 mt-0.5">{route.summary}</div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-purple-600">{route.total_time_min}分钟</div>
-                    <div className="text-sm text-gray-500">{route.total_distance_km}km</div>
+                    <div className="font-medium text-blue-600 text-sm">{route.total_time_min}分钟</div>
+                    <div className="text-xs text-slate-400">{route.total_distance_km}km</div>
                   </div>
                 </div>
                 {route.stop && (
-                  <div className="mt-2 pt-2 border-t border-gray-200 text-sm text-gray-600">
+                  <div className="mt-2 pt-2 border-t border-slate-200/50 text-xs text-slate-500">
                     途经：{route.stop.name} ({route.stop.category}) ⭐{route.stop.rating}
                   </div>
                 )}

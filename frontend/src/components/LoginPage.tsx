@@ -19,7 +19,7 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
     try {
       const endpoint = mode === "login" ? "/auth/login" : "/auth/register";
-      const response = await fetch(`http://localhost:8001${endpoint}`, {
+      const response = await fetch(`http://localhost:8002${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -36,7 +36,8 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
       if (mode === "register") {
         setMode("login");
         setError("");
-        alert("注册成功！请登录");
+        setUsername("");
+        setPassword("");
         return;
       }
 
@@ -52,95 +53,126 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-amber-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* 背景装饰 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-gradient-to-tr from-amber-100/40 to-pink-100/40 rounded-full blur-3xl"></div>
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md"
+        className="relative z-10 w-full max-w-sm"
       >
+        {/* Logo区域 */}
         <div className="text-center mb-8">
-          <div className="text-5xl mb-4">🌟</div>
-          <h1 className="text-3xl font-bold text-gray-800">现在就出发</h1>
-          <p className="text-gray-500 mt-2">智行伴侣，懂你的出行助手</p>
-        </div>
-
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={() => { setMode("login"); setError(""); }}
-            className={`flex-1 py-2 rounded-xl font-semibold transition-all ${
-              mode === "login"
-                ? "bg-purple-500 text-white shadow-lg"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            登录
-          </button>
-          <button
-            onClick={() => { setMode("register"); setError(""); }}
-            className={`flex-1 py-2 rounded-xl font-semibold transition-all ${
-              mode === "register"
-                ? "bg-purple-500 text-white shadow-lg"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            注册
-          </button>
-        </div>
-
-        {error && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm"
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.1 }}
+            className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-xl shadow-blue-500/20"
           >
-            {error}
+            ✨
           </motion.div>
-        )}
+          <h1 className="text-2xl font-semibold text-slate-800">智行伴侣</h1>
+          <p className="text-slate-400 text-sm mt-1">你的出行好朋友</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="text"
-              placeholder="用户名"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-              required
-              minLength={2}
-              maxLength={50}
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="密码"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
-              required
-              minLength={6}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
-          >
-            {loading ? "处理中..." : mode === "login" ? "登 录" : "注 册"}
-          </button>
-        </form>
-
-        {mode === "login" && (
-          <p className="text-center text-gray-500 text-sm mt-6">
-            还没有账号？
+        {/* 表单卡片 */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-xl shadow-slate-200/30 p-6">
+          {/* 切换标签 */}
+          <div className="flex gap-1 p-1 bg-slate-100/50 rounded-xl mb-6">
+            <button
+              onClick={() => { setMode("login"); setError(""); }}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                mode === "login"
+                  ? "bg-white text-slate-800 shadow-sm"
+                  : "text-slate-500 hover:text-slate-600"
+              }`}
+            >
+              登录
+            </button>
             <button
               onClick={() => { setMode("register"); setError(""); }}
-              className="text-purple-600 hover:underline ml-1 font-medium"
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                mode === "register"
+                  ? "bg-white text-slate-800 shadow-sm"
+                  : "text-slate-500 hover:text-slate-600"
+              }`}
             >
-              立即注册
+              注册
             </button>
-          </p>
-        )}
+          </div>
+
+          {/* 错误提示 */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-50 border border-red-100 text-red-500 px-4 py-2.5 rounded-xl mb-4 text-sm"
+            >
+              {error}
+            </motion.div>
+          )}
+
+          {/* 表单 */}
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <input
+                type="text"
+                placeholder="用户名"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white/50"
+                required
+                minLength={2}
+                maxLength={50}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="密码"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm bg-white/50"
+                required
+                minLength={6}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2.5 rounded-xl font-medium hover:shadow-lg hover:shadow-blue-500/20 transition-all disabled:opacity-50 text-sm"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  处理中
+                </span>
+              ) : mode === "login" ? "登录" : "注册"}
+            </button>
+          </form>
+
+          {/* 提示 */}
+          {mode === "login" && (
+            <p className="text-center text-slate-400 text-xs mt-4">
+              还没有账号？<button onClick={() => { setMode("register"); setError(""); }} className="text-blue-500 hover:underline">立即注册</button>
+            </p>
+          )}
+          
+          {mode === "register" && (
+            <p className="text-center text-slate-400 text-xs mt-4">
+              已有账号？<button onClick={() => { setMode("login"); setError(""); }} className="text-blue-500 hover:underline">立即登录</button>
+            </p>
+          )}
+        </div>
+
+        {/* 底部装饰文字 */}
+        <p className="text-center text-slate-300 text-xs mt-8">
+          发现城市的美好角落
+        </p>
       </motion.div>
     </div>
   );
