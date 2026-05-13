@@ -7,6 +7,7 @@ import { ItineraryCardGroup } from "./components/ItineraryCard";
 import { LoginPage } from "./components/LoginPage";
 import { DestinationPage } from "./components/DestinationPage";
 import { TaskPlannerPage } from "./components/TaskPlannerPage";
+import { SmartChatBox } from "./components/SmartChatBox";
 
 interface Recommendation {
   poi_id: string;
@@ -89,7 +90,7 @@ function App() {
   const [routes, setRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [planning, setPlanning] = useState(false);
-  const [activeTab, setActiveTab] = useState<"mood" | "chat" | "itinerary" | "destination" | "task">("mood");
+  const [activeTab, setActiveTab] = useState<"mood" | "chat" | "itinerary" | "destination" | "task" | "smartchat">("mood");
   const [restPoints, setRestPoints] = useState<any[]>([]);
   const [showRest, setShowRest] = useState(false);
   const [climateSegments, setClimateSegments] = useState<any[]>([]);
@@ -389,6 +390,16 @@ function App() {
             }`}
           >
             💬 智能对话
+          </button>
+          <button
+            onClick={() => setActiveTab("smartchat")}
+            className={`px-5 py-3 rounded-xl font-medium transition-all ${
+              activeTab === "smartchat"
+                ? "bg-purple-600 text-white shadow-lg"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            🤖 AI助手
           </button>
           <button
             onClick={() => setActiveTab("itinerary")}
@@ -747,6 +758,12 @@ function App() {
         {activeTab === "chat" && (
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6" style={{ height: "500px" }}>
             <ChatBox onComplete={handleChatComplete} />
+          </div>
+        )}
+
+        {activeTab === "smartchat" && (
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6" style={{ height: "600px" }}>
+            <SmartChatBox />
           </div>
         )}
 
