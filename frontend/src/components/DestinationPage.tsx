@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapView } from "./MapView";
+import { API_BASE_URL } from "../config/api";
 
 interface Location {
   id: string;
@@ -33,7 +34,7 @@ export function DestinationPage() {
   const [selectedRoute, setSelectedRoute] = useState<RoutePlan | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8002/route/locations")
+    fetch(`${API_BASE_URL}/route/locations`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -55,7 +56,7 @@ export function DestinationPage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:8002/route/destination?from_loc=${fromLoc}&to_loc=${toLoc}&mode=${mode}`
+        `${API_BASE_URL}/route/destination?from_loc=${fromLoc}&to_loc=${toLoc}&mode=${mode}`
       );
       const data = await res.json();
       if (data.success) {

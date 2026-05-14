@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "../config/api";
 
 interface LoginPageProps {
   onLoginSuccess: (user: { id: number; username: string }) => void;
@@ -19,7 +20,7 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
     try {
       const endpoint = mode === "login" ? "/auth/login" : "/auth/register";
-      const response = await fetch(`http://localhost:8002${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

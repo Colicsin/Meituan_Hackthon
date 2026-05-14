@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "../config/api";
 
 interface Message {
   role: "user" | "assistant";
@@ -20,7 +21,7 @@ export function SmartChatBox() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8002/smart-chat/suggest")
+    fetch(`${API_BASE_URL}/smart-chat/suggest`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -46,7 +47,7 @@ export function SmartChatBox() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8002/smart-chat/chat", {
+      const res = await fetch(`${API_BASE_URL}/smart-chat/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

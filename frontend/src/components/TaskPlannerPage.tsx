@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "../config/api";
 
 interface Task {
   task: string;
@@ -17,7 +18,7 @@ export function TaskPlannerPage() {
   const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8002/route/tasks")
+    fetch(`${API_BASE_URL}/route/tasks`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -25,7 +26,7 @@ export function TaskPlannerPage() {
         }
       });
     
-    fetch("http://localhost:8002/route/locations")
+    fetch(`${API_BASE_URL}/route/locations`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -61,7 +62,7 @@ export function TaskPlannerPage() {
         time_budget: timeBudget.toString()
       });
       
-      const res = await fetch(`http://localhost:8002/route/task?${params}`);
+      const res = await fetch(`${API_BASE_URL}/route/task?${params}`);
       const data = await res.json();
       
       if (data.success) {
