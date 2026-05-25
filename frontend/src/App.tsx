@@ -8,6 +8,7 @@ import { LoginPage } from "./components/LoginPage";
 import { DestinationPage } from "./components/DestinationPage";
 import { TaskPlannerPage } from "./components/TaskPlannerPage";
 import { SmartChatBox } from "./components/SmartChatBox";
+import { SmartPlanPage } from "./components/SmartPlanPage";
 
 interface Recommendation {
   poi_id: string;
@@ -337,11 +338,11 @@ function App() {
   }
 
   const tabs = [
+    { id: "smartplan", label: "智能规划", icon: "🎯", desc: "一键规划" },
     { id: "mood", label: "情绪闲逛", icon: "🎭", desc: "随心探索" },
     { id: "destination", label: "目的地", icon: "🗺️", desc: "从A到B" },
     { id: "task", label: "目的任务", icon: "📋", desc: "安排行程" },
     { id: "smartchat", label: "AI助手", icon: "✨", desc: "智能对话" },
-    { id: "itinerary", label: "快速规划", icon: "🚶", desc: "一键生成" },
   ] as const;
 
   return (
@@ -405,6 +406,8 @@ function App() {
           ))}
         </div>
 
+        {activeTab === "smartplan" && <SmartPlanPage />}
+        
         {activeTab === "destination" && <DestinationPage />}
         
         {activeTab === "task" && <TaskPlannerPage />}
