@@ -2,9 +2,9 @@ const isDev = import.meta.env.DEV;
 
 const getApiBase = () => {
   if (isDev) {
-    return 'http://localhost:8002';
+    return 'http://localhost:8001';
   }
-  return window.location.origin.replace(/:\d+$/, ':8002');
+  return window.location.origin.replace(/:\d+$/, ':8001');
 };
 
 export const API_BASE_URL = getApiBase();
